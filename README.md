@@ -1,18 +1,12 @@
-# Murder Game
+# React + Vite
 
-## What is the Murder Game?
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Murder Game is a fun game that makes great memories for your next trip with friends and family!
+Currently, two official plugins are available:
 
-The rules are simple: everyone is randomly assigned a target, a random object, and a location. Throughout the trip, your goal is to "murder" your target by handing them the random object in the location. Your target must willingly accept the object and there must be a witness to see it happen.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-This is a simple webapp to facilitate the setup of the game.
+## Expanding the ESLint configuration
 
-## Where does the game originate from?
-
-The game origins are difficult to trace, but historians generally agree that it was popularized by the Kerr family in the Victorian era.
-
-
-## Have feedback?
-
-Leave a [comment](https://github.com/ryskwok/murder-game/issues/new) :)
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
