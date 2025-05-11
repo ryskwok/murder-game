@@ -3,16 +3,23 @@ import React, { useState, useEffect } from 'react';
 const MurderGame = () => {
   // Add Google Fonts import
   useEffect(() => {
-    // Create a link element
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Kirang+Haerang&display=swap';
-    link.rel = 'stylesheet';
+    // Create link elements for both fonts
+    const kirangLink = document.createElement('link');
+    kirangLink.href = 'https://fonts.googleapis.com/css2?family=Kirang+Haerang&display=swap';
+    kirangLink.rel = 'stylesheet';
+
+    const zainLink = document.createElement('link');
+    zainLink.href = 'https://fonts.googleapis.com/css2?family=Zain&display=swap';
+    zainLink.rel = 'stylesheet';
+
     // Append to the document head
-    document.head.appendChild(link);
+    document.head.appendChild(kirangLink);
+    document.head.appendChild(zainLink);
     
-    // Cleanup function to remove the link when the component unmounts
+    // Cleanup function to remove the links when the component unmounts
     return () => {
-      document.head.removeChild(link);
+      document.head.removeChild(kirangLink);
+      document.head.removeChild(zainLink);
     };
   }, []);
 
@@ -110,10 +117,58 @@ const MurderGame = () => {
     setCurrentLocationIndex(0);
   };
 
+  // Handle keyboard events
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      switch (step) {
+        case 1:
+          setPlayerNames(Array(playerCount).fill(''));
+          setStep(2);
+          break;
+        case 2:
+          if (!playerNames.some(name => !name.trim())) {
+            setWeapons(Array(playerCount).fill(''));
+            setStep(3);
+          }
+          break;
+        case 3:
+          if (weapons[currentWeaponIndex]?.trim()) {
+            if (currentWeaponIndex === playerCount - 1) {
+              setLocations(Array(playerCount).fill(''));
+              setStep(4);
+            } else {
+              setCurrentWeaponIndex(currentWeaponIndex + 1);
+            }
+          }
+          break;
+        case 4:
+          if (locations[currentLocationIndex]?.trim()) {
+            if (currentLocationIndex === playerCount - 1) {
+              generateCards();
+              setStep(5);
+            } else {
+              setCurrentLocationIndex(currentLocationIndex + 1);
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  // Add keyboard event listener
+  useEffect(() => {
+    window.addEventListener('keypress', handleKeyPress);
+    return () => {
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+  }, [step, playerCount, playerNames, weapons, currentWeaponIndex, locations, currentLocationIndex]);
+
   // Render step 1: Player count
   const renderPlayerCount = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">How many people are playing?</h2>
+    <div className="space-y-6 relative min-h-[200px]">
+      <h2 className="text-3xl font-thin">How many people are playing?</h2>
       <div className="space-y-4">
         <input
           type="range"
@@ -123,54 +178,55 @@ const MurderGame = () => {
           onChange={handlePlayerCountChange}
           className="w-full"
         />
-        <div className="text-center text-xl font-bold">{playerCount}</div>
+        <div className="text-center text-4xl font-bold">{playerCount}</div>
       </div>
-      <button
-        onClick={() => {
-          setPlayerNames(Array(playerCount).fill(''));
-          setStep(2);
-        }}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-      >
-        Next
-      </button>
+      <div className="absolute bottom-0 right-0">
+        <button
+          onClick={() => {
+            setPlayerNames(Array(playerCount).fill(''));
+            setStep(2);
+          }}
+          className="px-4 py-2 text-2xl bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 
   // Render step 2: Player names
   const renderPlayerNames = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">What are their names?</h2>
-      <div className="space-y-4">
+    <div className="space-y-6 relative min-h-[200px]">
+      <h2 className="text-3xl font-thin">What are their names?</h2>
+      <div className="space-y-4 pb-16">
         {playerNames.map((name, index) => (
           <div key={index} className="space-y-2">
-            <label className="block text-sm font-medium">
-              Player {index + 1}
-            </label>
             <input
               type="text"
               value={name}
               onChange={(e) => handlePlayerNameChange(index, e.target.value)}
               placeholder={`Enter Player ${index + 1}'s name`}
-              className="w-full px-3 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 text-2xl bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         ))}
       </div>
-      <div className="flex space-x-4">
+      <div className="absolute bottom-0 left-0">
         <button
           onClick={() => setStep(1)}
-          className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+          className="px-4 py-2 text-2xl bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
         >
           Back
         </button>
+      </div>
+      <div className="absolute bottom-0 right-0">
         <button
           onClick={() => {
             setWeapons(Array(playerCount).fill(''));
             setStep(3);
           }}
           disabled={playerNames.some(name => !name.trim())}
-          className={`flex-1 px-4 py-2 rounded-md transition-colors ${
+          className={`px-4 py-2 text-2xl rounded-md transition-colors ${
             playerNames.some(name => !name.trim())
               ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
               : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -184,12 +240,17 @@ const MurderGame = () => {
 
   // Render step 3: Weapons
   const renderWeapons = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Enter murder weapons</h2>
-      <div className="text-center text-lg">
-        Weapon {currentWeaponIndex + 1} of {playerCount}
+    <div className="space-y-6 relative min-h-[200px]">
+      <h2 className="text-3xl font-thin">Enter murder weapons ({currentWeaponIndex + 1} of {playerCount})</h2>
+      <div className="space-y-2">
+        <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-blue-600 transition-all duration-300 ease-in-out"
+            style={{ width: `${((currentWeaponIndex + 1) / playerCount) * 100}%` }}
+          />
+        </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 pb-16">
         <input
           type="text"
           value={weapons[currentWeaponIndex] || ''}
@@ -198,17 +259,25 @@ const MurderGame = () => {
             newWeapons[currentWeaponIndex] = e.target.value;
             setWeapons(newWeapons);
           }}
-          placeholder="Enter a weapon"
-          className="w-full px-3 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="e.g. a large branch, an egg, three paperclips"
+          className="w-full px-3 py-2.5 text-2xl bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <div className="flex space-x-4">
+      <div className="absolute bottom-0 left-0">
         <button
-          onClick={() => setStep(2)}
-          className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+          onClick={() => {
+            if (currentWeaponIndex > 0) {
+              setCurrentWeaponIndex(currentWeaponIndex - 1);
+            } else {
+              setStep(2);
+            }
+          }}
+          className="px-4 py-2 text-2xl bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
         >
           Back
         </button>
+      </div>
+      <div className="absolute bottom-0 right-0">
         <button
           onClick={() => {
             if (currentWeaponIndex === playerCount - 1) {
@@ -219,13 +288,13 @@ const MurderGame = () => {
             }
           }}
           disabled={!weapons[currentWeaponIndex]?.trim()}
-          className={`flex-1 px-4 py-2 rounded-md transition-colors ${
+          className={`px-4 py-2 text-2xl rounded-md transition-colors ${
             !weapons[currentWeaponIndex]?.trim()
               ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
               : 'bg-blue-600 text-white hover:bg-blue-700'
           }`}
         >
-          {currentWeaponIndex === playerCount - 1 ? 'Next' : 'Next Weapon'}
+          Next
         </button>
       </div>
     </div>
@@ -233,12 +302,17 @@ const MurderGame = () => {
 
   // Render step 4: Locations
   const renderLocations = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Enter murder locations</h2>
-      <div className="text-center text-lg">
-        Location {currentLocationIndex + 1} of {playerCount}
+    <div className="space-y-6 relative min-h-[200px]">
+      <h2 className="text-3xl font-thin">Enter murder locations ({currentLocationIndex + 1} of {playerCount})</h2>
+      <div className="space-y-2">
+        <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-blue-600 transition-all duration-300 ease-in-out"
+            style={{ width: `${((currentLocationIndex + 1) / playerCount) * 100}%` }}
+          />
+        </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 pb-16">
         <input
           type="text"
           value={locations[currentLocationIndex] || ''}
@@ -247,17 +321,20 @@ const MurderGame = () => {
             newLocations[currentLocationIndex] = e.target.value;
             setLocations(newLocations);
           }}
-          placeholder="Enter a location"
-          className="w-full px-3 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="e.g. on a couch, in the bathroom, under a table"
+          className="w-full px-3 py-2.5 text-2xl bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          autoFocus
         />
       </div>
-      <div className="flex space-x-4">
+      <div className="absolute bottom-0 left-0">
         <button
           onClick={() => setStep(3)}
-          className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+          className="px-4 py-2 text-2xl bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
         >
           Back
         </button>
+      </div>
+      <div className="absolute bottom-0 right-0">
         <button
           onClick={() => {
             if (currentLocationIndex === playerCount - 1) {
@@ -268,13 +345,13 @@ const MurderGame = () => {
             }
           }}
           disabled={!locations[currentLocationIndex]?.trim()}
-          className={`flex-1 px-4 py-2 rounded-md transition-colors ${
+          className={`px-4 py-2 text-2xl rounded-md transition-colors ${
             !locations[currentLocationIndex]?.trim()
               ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
               : 'bg-blue-600 text-white hover:bg-blue-700'
           }`}
         >
-          {currentLocationIndex === playerCount - 1 ? 'Start Game' : 'Next Location'}
+          {currentLocationIndex === playerCount - 1 ? 'Start Game' : 'Next'}
         </button>
       </div>
     </div>
@@ -283,31 +360,37 @@ const MurderGame = () => {
   // Render step 5: Cards
   const renderCards = () => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-center">murder game cards</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
+      <div className="text-center space-y-4">
+        <h2 className="text-3xl font-black">Let's begin!</h2>
+        <p className="text-gray-300 text-xl md:text-2xl">
+          Click below to see your assignment. Remember, your target must willingly accept your weapon in the assigned location and there must be a witness. Happy murdering 😉
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {cards.map((card, index) => (
           <div
             key={index}
             onClick={() => handleCardFlip(index)}
-            className={`relative h-48 sm:h-56 md:h-64 cursor-pointer transition-transform duration-500 transform ${
-              card.isFlipped ? 'rotate-y-180' : ''
+            className={`relative h-48 sm:h-56 md:h-64 cursor-pointer transition-all duration-500 ${
+              flippedCardIndex !== null && flippedCardIndex !== index ? 'opacity-30 blur-sm' : ''
             }`}
           >
-            <div className={`absolute w-full h-full backface-hidden ${
-              card.isFlipped ? 'hidden' : 'block'
+            <div className={`absolute w-full h-full transition-all duration-500 transform ${
+              card.isFlipped ? 'rotate-y-180 opacity-0' : 'rotate-y-0 opacity-100'
             }`}>
               <div className="w-full h-full bg-blue-600 rounded-lg shadow-lg flex items-center justify-center p-4">
-                <h3 className="text-xl md:text-2xl font-bold text-white text-center">{card.name}</h3>
+                <h3 className="text-3xl md:text-4xl font-bold text-white text-center">{card.name}</h3>
               </div>
             </div>
-            <div className={`absolute w-full h-full backface-hidden ${
-              card.isFlipped ? 'block' : 'hidden'
+            <div className={`absolute w-full h-full transition-all duration-500 transform ${
+              card.isFlipped ? 'rotate-y-0 opacity-100' : '-rotate-y-180 opacity-0'
             }`}>
-              <div className="w-full h-full bg-red-600 rounded-lg shadow-lg flex flex-col items-center justify-center p-4">
+              <div className="w-full h-full bg-blue-900/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-4">
                 <div className="text-white text-center space-y-2">
-                  <p className="text-base md:text-lg">Target: {card.target}</p>
-                  <p className="text-base md:text-lg">Weapon: {card.weapon}</p>
-                  <p className="text-base md:text-lg">Location: {card.location}</p>
+                  <p className="text-xl md:text-2xl mb-4">{card.name}, your target is:</p>
+                  <p className="text-2xl md:text-3xl">🎯 {card.target}</p>
+                  <p className="text-2xl md:text-3xl">🔪 {card.weapon}</p>
+                  <p className="text-2xl md:text-3xl">📍 {card.location}</p>
                 </div>
               </div>
             </div>
@@ -318,21 +401,21 @@ const MurderGame = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-900 text-white font-['Zain']">
+      <div className="w-screen px-4 py-8">
         <div className="flex items-center justify-center gap-4 mb-8">
-          <h1 className="text-4xl font-bold font-['Kirang_Haerang']">
+          <h1 className="text-6xl font-bold font-['Kirang_Haerang']">
             murder game
           </h1>
           <button
             onClick={resetGame}
-            className="text-2xl hover:text-blue-400 transition-colors"
+            className="text-3xl hover:text-blue-400 transition-colors"
             title="Reset Game"
           >
             ↻
           </button>
         </div>
-        <div className="w-full max-w-7xl mx-auto bg-gray-800 rounded-lg shadow-xl p-4 sm:p-6 md:p-8">
+        <div className="w-full md:w-[50vw] mx-auto rounded-lg p-4 sm:p-6 md:p-8">
           {step === 1 && renderPlayerCount()}
           {step === 2 && renderPlayerNames()}
           {step === 3 && renderWeapons()}
