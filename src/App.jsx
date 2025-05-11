@@ -1,10 +1,9 @@
 import React from 'react'
 import MurderGame from './MurderGame'
-import './App.css'
 
 function App() {
   return (
-    <div className="App">
+    <div className="min-h-screen bg-gray-900 text-white">
       <MurderGame />
     </div>
   )

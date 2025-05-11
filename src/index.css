@@ -4,18 +4,15 @@
 
 /* Custom styles that can't be easily achieved with Tailwind */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base layout */
+body {
+  @apply m-0 min-h-screen min-w-[320px] flex items-center justify-center;
 }
 
 /* Custom button focus styles that extend Tailwind */
@@ -25,44 +22,13 @@ button:focus-visible {
 
 /* Custom link styles that extend Tailwind */
 a {
-  @apply font-medium text-[#646cff] no-underline;
-}
-a:hover {
-  @apply text-[#535bf2];
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
+  @apply font-medium text-[#646cff] no-underline hover:text-[#535bf2];
 }
 
 /* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
   :root {
-    @apply text-white/87 bg-[#242424];
+    @apply text-white/90 bg-[#242424];
   }
 }
 
@@ -74,7 +40,53 @@ button:hover {
   a:hover {
     @apply text-[#747bff];
   }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+/* Card flip styles */
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Range input styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: #4B5563;
+  border-radius: 4px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #3B82F6;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #2563EB;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #3B82F6;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: #2563EB;
 }
