@@ -60,24 +60,36 @@ const MurderGame = () => {
 
   // Generate cards
   const generateCards = () => {
-    // Create a copy of player names for target assignment
-    let remainingTargets = [...playerNames];
+    // Create arrays of available targets, weapons, and locations
+    let availableTargets = [...playerNames];
+    let availableWeapons = [...weapons];
+    let availableLocations = [...locations];
     
-    // Generate cards with unique targets
+    // Generate cards with unique assignments
     const newCards = playerNames.map((name, index) => {
       // Remove current player from available targets
-      const availableTargets = remainingTargets.filter(target => target !== name);
+      const playerTargets = availableTargets.filter(target => target !== name);
       
       // Select a random target from available targets
-      const targetIndex = Math.floor(Math.random() * availableTargets.length);
-      const target = availableTargets[targetIndex];
+      const targetIndex = Math.floor(Math.random() * playerTargets.length);
+      const target = playerTargets[targetIndex];
       
-      // Remove selected target from remaining targets
-      remainingTargets = remainingTargets.filter(t => t !== target);
+      // Remove selected target from available targets
+      availableTargets = availableTargets.filter(t => t !== target);
       
-      // Generate random weapon and location
-      const weapon = weapons[Math.floor(Math.random() * weapons.length)];
-      const location = locations[Math.floor(Math.random() * locations.length)];
+      // Select a random weapon from available weapons
+      const weaponIndex = Math.floor(Math.random() * availableWeapons.length);
+      const weapon = availableWeapons[weaponIndex];
+      
+      // Remove selected weapon from available weapons
+      availableWeapons = availableWeapons.filter(w => w !== weapon);
+      
+      // Select a random location from available locations
+      const locationIndex = Math.floor(Math.random() * availableLocations.length);
+      const location = availableLocations[locationIndex];
+      
+      // Remove selected location from available locations
+      availableLocations = availableLocations.filter(l => l !== location);
 
       return {
         name,
