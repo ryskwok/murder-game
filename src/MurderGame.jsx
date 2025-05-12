@@ -378,7 +378,7 @@ const MurderGame = () => {
             <div className={`absolute w-full h-full transition-all duration-500 transform ${
               card.isFlipped ? 'rotate-y-0 opacity-100' : '-rotate-y-180 opacity-0'
             }`}>
-              <div className="w-full h-full bg-blue-900/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-4">
+              <div className="w-full h-full bg-gray-600 rounded-lg shadow-lg flex flex-col items-center justify-center p-4">
                 <div className="text-white text-center space-y-2">
                   <p className="text-xl md:text-2xl mb-4">{card.name}, your target is:</p>
                   <p className="text-2xl md:text-3xl">🎯 {card.target}</p>
