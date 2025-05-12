@@ -395,8 +395,8 @@ const MurderGame = () => {
 
   return (
     <div className="min-h-screen text-white font-['Zain'] flex flex-col relative">
-      <div className="absolute inset-0 bg-gray-900 opacity-90"></div>
-      <div className="absolute inset-0" style={{ backgroundImage: "url('/paper-texture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'cover', opacity: 0.3 }}></div>
+      <div className="absolute inset-0 bg-black opacity-85"></div>
+      <div className="absolute inset-0" style={{ backgroundImage: "url('/paper-texture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'cover', opacity: 0.4 }}></div>
       <div className="relative flex-grow w-screen px-4 py-8">
         <div className="flex items-center justify-center gap-4 mb-8">
           <h1 className="text-7xl font-bold font-['Kirang_Haerang']">
