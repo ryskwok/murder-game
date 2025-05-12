@@ -1,0 +1,3 @@
+AddType application/javascript .js
+AddType application/javascript .jsx
+AddType application/javascript .mjs 
