@@ -394,7 +394,7 @@ const MurderGame = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-['Zain'] flex flex-col">
+    <div className="min-h-screen bg-gray-900 text-white font-['Zain'] flex flex-col" style={{ backgroundImage: "url('/paper-texture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply', opacity: 1 }}>
       <div className="flex-grow w-screen px-4 py-8">
         <div className="flex items-center justify-center gap-4 mb-8">
           <h1 className="text-7xl font-bold font-['Kirang_Haerang']">
