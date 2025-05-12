@@ -394,8 +394,10 @@ const MurderGame = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-['Zain'] flex flex-col" style={{ backgroundImage: "url('/paper-texture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply', opacity: 1 }}>
-      <div className="flex-grow w-screen px-4 py-8">
+    <div className="min-h-screen text-white font-['Zain'] flex flex-col relative">
+      <div className="absolute inset-0 bg-gray-900 opacity-90"></div>
+      <div className="absolute inset-0" style={{ backgroundImage: "url('/paper-texture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'cover', opacity: 0.3 }}></div>
+      <div className="relative flex-grow w-screen px-4 py-8">
         <div className="flex items-center justify-center gap-4 mb-8">
           <h1 className="text-7xl font-bold font-['Kirang_Haerang']">
             murder game
@@ -416,7 +418,7 @@ const MurderGame = () => {
           {step === 5 && renderCards()}
         </div>
       </div>
-      <div className="mt-auto py-4 text-center">
+      <div className="mt-auto py-4 text-center relative z-10">
         <a
           href="https://github.com/ryskwok/murder-game?tab=readme-ov-file#murder-game"
           target="_blank"
