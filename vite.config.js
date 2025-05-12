@@ -4,14 +4,15 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/murder-game/',
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
+        manualChunks: undefined,
+        entryFileNames: 'assets/[name].mjs',
+        chunkFileNames: 'assets/[name].mjs',
         assetFileNames: 'assets/[name].[ext]'
       }
     }
