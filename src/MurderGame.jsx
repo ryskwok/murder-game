@@ -60,34 +60,17 @@ const MurderGame = () => {
 
   // Generate cards
   const generateCards = () => {
-    // Create initial pools (duplicates are allowed in weapons and locations)
-    let availableTargets = [...playerNames];
-    let availableWeapons = [...weapons];
-    let availableLocations = [...locations];
-    
-    // Generate cards
+    // Generate cards with random assignments
     const newCards = playerNames.map((name) => {
       // Select a random target (can be any player except self)
-      const playerTargets = availableTargets.filter(target => target !== name);
-      const targetIndex = Math.floor(Math.random() * playerTargets.length);
-      const target = playerTargets[targetIndex];
-      
-      // Remove selected target from available targets
-      availableTargets = availableTargets.filter(t => t !== target);
+      const availableTargets = playerNames.filter(target => target !== name);
+      const target = availableTargets[Math.floor(Math.random() * availableTargets.length)];
       
       // Select a random weapon
-      const weaponIndex = Math.floor(Math.random() * availableWeapons.length);
-      const weapon = availableWeapons[weaponIndex];
-      
-      // Remove selected weapon from available weapons
-      availableWeapons = availableWeapons.filter((_, index) => index !== weaponIndex);
+      const weapon = weapons[Math.floor(Math.random() * weapons.length)];
       
       // Select a random location
-      const locationIndex = Math.floor(Math.random() * availableLocations.length);
-      const location = availableLocations[locationIndex];
-      
-      // Remove selected location from available locations
-      availableLocations = availableLocations.filter((_, index) => index !== locationIndex);
+      const location = locations[Math.floor(Math.random() * locations.length)];
 
       return {
         name,
